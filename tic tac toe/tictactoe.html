@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 4px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="board" id="board"></div>
+    <p id="message"></p>
+
+    <script>
+        const board = document.getElementById("board");
+        const message = document.getElementById("message");
+        let currentPlayer = "X";
+        let boardState = ["", "", "", "", "", "", "", "", ""]; // Represents the state of each cell in the board.
+
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+                    message.textContent = `${boardState[a]} wins!`;
+                    return;
+                }
+            }
+
+            if (!boardState.includes("")) {
+                message.textContent = "It's a draw!";
+            }
+        }
+
+        function handleCellClick(index) {
+            if (boardState[index] || message.textContent) {
+                return; // Cell is already occupied or the game is over.
+            }
+
+            boardState[index] = currentPlayer;
+            const cell = document.createElement("div");
+            cell.textContent = currentPlayer;
+            cell.classList.add("cell");
+            board.appendChild(cell);
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            checkWinner();
+        }
+
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.addEventListener("click", () => handleCellClick(i));
+            board.appendChild(cell);
+        }
+    </script>
+</body>
+</html>
